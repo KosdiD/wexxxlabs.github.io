@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Електронний підпис</title>
+<script>
+function calculateSignature() {
+    var formElements = document.forms["CheckForm"].elements;
+    var signatureString = "";
+
+    for (var i = 0; i < formElements.length; i++) {
+        if (formElements[i].name) {
+            signatureString += formElements[i].name + "=" + encodeURIComponent(formElements[i].value) + "&";
+        }
+    }
+
+    var secretNumber = 2315765;
+    signatureString += "secret=" + secretNumber;
+
+    var checksum = calculateChecksum(signatureString);
+
+    document.getElementById("signature").textContent = signatureString;
+    document.getElementById("checksum").textContent = checksum;
+}
+
+function calculateChecksum(signatureString) {
+
+    var checksum = 0;
+    for (var i = 0; i < signatureString.length; i++) {
+        checksum += signatureString.charCodeAt(i);
+    }
+    return checksum;
+}
+</script>
+</head>
+<body>
+<form name="CheckForm">
+Надрукуйте ім'я<input type='text' name="name" value="name"><br>
+Надрукуйте email<input type='text' name="email" value="name@at.ua"><br>
+Надрукуйте дійсне число<input type='text' name="number" value="12.3"><br>
+</form>
+
+<button onclick="calculateSignature()">Створити підпис</button>
+<p><strong>Рядок електронного підпису:</strong> <span id="signature"></span></p>
+<p><strong>Контрольна сума:</strong> <span id="checksum"></span></p>
+
+</body>
+</html>
